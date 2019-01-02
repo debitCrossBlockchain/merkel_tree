@@ -398,8 +398,7 @@ public:
 	void minproof(int tx_sum, int target_index);
 	void maxproof(int tx_sum, int target_index);
 	void normalproof(int tx_sum, int pre_index, int next_index);
-
-
+	void merklerootexclusive(const std::vector<string> &hash, const std::string &target_hash);
 };
 
 #endif

@@ -239,3 +239,12 @@ void tree::maxproof(int tx_sum, int target_index){
 	flag = buildflags(tx_sum, target_index);
 	std::cout << "maxflag :" << flag << endl;
 }
+
+void tree::normalproof(int tx_sum, int pre_index, int next_index){
+	string pre_flag, next_flag;
+	pre_flag = buildflags(tx_sum, pre_index);
+	next_flag = buildflags(tx_sum, next_index);
+	std::cout << "preflag :" << pre_flag << endl;
+	std::cout << "nextflag :" << next_flag << endl;
+}
+
