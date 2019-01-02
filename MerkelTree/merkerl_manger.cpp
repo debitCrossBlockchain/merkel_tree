@@ -222,7 +222,8 @@ string tree::buildflags(int tx_sum, int target_index){
 	std::cout << "hash list of " << target_index << " :" << endl;
 	std::list<int>::const_iterator iter = hash.begin();
 	while (iter != hash.end()){
-		std::cout << " " << *iter << ";";
+		int temp = *iter++;
+		std::cout << " " << temp << ";";
 	}
 	std::cout << endl;
 	return "1" + sub_str; //root 节点
@@ -256,13 +257,13 @@ void tree::merklerootexclusive(const std::vector<string> &hash, const std::strin
 	while (index < length)
 	{
 		std::string cur = hash[index];
-		if (target_hash.compare(cur)>0) {
+		if (target_hash.compare(cur)!=0) {
 			index++;
 			continue;
 		}
-		else if (target_hash.compare(cur) == 0) {
+		/*else if (target_hash.compare(cur) == 0) {
 			continue;
-		}
+		}*/
 		else {
 			if (index == 1){
 				//next = sortedtxhash[0]
@@ -280,5 +281,4 @@ void tree::merklerootexclusive(const std::vector<string> &hash, const std::strin
 	//fmt.Printf("maxtx : %s vs \ntarget : %s \n", sortedtxhash[length - 1], reverseHash(targettxhash).String()) //最大tx<目标交易
 	maxproof(length, length - 1);                                                                              //给出cur的proof路径及hash，锁定cur指向最大tx
 	return;
-
 }

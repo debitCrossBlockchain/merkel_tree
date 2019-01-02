@@ -399,6 +399,7 @@ public:
 	void maxproof(int tx_sum, int target_index);
 	void normalproof(int tx_sum, int pre_index, int next_index);
 	void merklerootexclusive(const std::vector<string> &hash, const std::string &target_hash);
+	string HashMerkleBranches(const string &left, const string right);
 };
 
 #endif
