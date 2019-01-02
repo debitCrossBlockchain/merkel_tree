@@ -253,7 +253,6 @@ void tree::merklerootexclusive(const std::vector<string> &hash, const std::strin
 	int length = hash.size();
 
 	int index = 1;
-	int slice = 0;
 	while (index < length)
 	{
 		std::string cur = hash[index];
