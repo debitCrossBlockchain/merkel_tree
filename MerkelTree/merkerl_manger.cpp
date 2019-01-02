@@ -233,3 +233,9 @@ void tree::minproof(int tx_sum, int target_index){
 	flag = buildflags(tx_sum, target_index);
 	std::cout << "minflag :" << flag << endl;
 }
+
+void tree::maxproof(int tx_sum, int target_index){
+	string flag;
+	flag = buildflags(tx_sum, target_index);
+	std::cout << "maxflag :" << flag << endl;
+}
