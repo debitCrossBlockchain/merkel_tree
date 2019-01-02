@@ -229,5 +229,7 @@ string tree::buildflags(int tx_sum, int target_index){
 }
 
 void tree::minproof(int tx_sum, int target_index){
-
+	string flag;
+	flag = buildflags(tx_sum, target_index);
+	std::cout << "minflag :" << flag << endl;
 }
