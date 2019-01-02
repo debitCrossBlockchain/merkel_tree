@@ -395,6 +395,9 @@ public:
 	virtual ~tree();
 
 	string buildflags(int tx_sum, int target_index);
+	void minproof(int tx_sum, int target_index);
+
+
 };
 
 #endif
