@@ -397,7 +397,7 @@ public:
 	string buildflags(int tx_sum, int target_index);
 	void minproof(int tx_sum, int target_index);
 	void maxproof(int tx_sum, int target_index);
-	void normalproof(int tx_sum, int target_index);
+	void normalproof(int tx_sum, int pre_index, int next_index);
 
 
 };
