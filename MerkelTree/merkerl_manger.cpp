@@ -1,5 +1,7 @@
 #include"stdafx.h"
 #include"merkerl_manger.h"
+#include<list>
+using namespace std;
 
 node::node()
 {
@@ -189,5 +191,39 @@ void tree::iterateUp(int element){
 tree::~tree() {}
 
 string tree::buildflags(int tx_sum, int target_index){
+	std::list<int> hash;
+	int nodes_length = tx_sum * 2 - 1;
+	string sub_str;
+	int cur = target_index;
 
+	while (cur < nodes_length - 1){
+		if (cur % 2 == 0) {
+			sub_str = "1" + sub_str + "0";
+			if (cur == target_index){
+				hash.push_front(cur);
+				hash.push_back(cur + 1);
+			}
+			else {
+				hash.push_back(cur + 1);
+			}
+		}
+		else {
+			sub_str = "01" + sub_str;
+			if (cur == target_index){
+				hash.push_front(cur);
+				hash.push_back(cur - 1);
+			}
+			else {
+				hash.push_front(cur - 1);
+			}
+		}
+		cur = nodes_length - (nodes_length - cur - (cur + 1) % 2) / 2;
+	}
+	std::cout << "hash list of " << target_index << " :" << endl;
+	std::list<int>::const_iterator iter = hash.begin();
+	while (iter != hash.end()){
+		std::cout << " " << *iter << ";";
+	}
+	std::cout << endl;
+	return "1" + sub_str; //root ½Úµã
 }
