@@ -187,3 +187,7 @@ void tree::iterateUp(int element){
 	//std::cout << "Done iterating" << '\n';
 }
 tree::~tree() {}
+
+string tree::buildflags(int tx_sum, int target_index){
+
+}

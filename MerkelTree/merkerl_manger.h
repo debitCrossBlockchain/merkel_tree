@@ -393,6 +393,8 @@ public:
 	void iterateUp(int element);
 	int verify(string hash);
 	virtual ~tree();
+
+	string buildflags(int tx_sum, int target_index);
 };
 
 #endif
