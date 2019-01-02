@@ -248,3 +248,38 @@ void tree::normalproof(int tx_sum, int pre_index, int next_index){
 	std::cout << "nextflag :" << next_flag << endl;
 }
 
+void tree::merklerootexclusive(const std::vector<string> &hash, const std::string &target_hash){
+	//已确认target不在txs里，merkle树已构造出，给出不存在性证明
+	int length = hash.size();
+
+	int index = 1;
+	int slice = 0;
+	while (index < length)
+	{
+		std::string cur = hash[index];
+		if (target_hash.compare(cur)>0) {
+			index++;
+			continue;
+		}
+		else if (target_hash.compare(cur) == 0) {
+			continue;
+		}
+		else {
+			if (index == 1){
+				//next = sortedtxhash[0]
+				//fmt.Printf("mintx : %s vs \ntarget : %s \n", reverseHash(cur).String(), reverseHash(targettxhash).String()) //最小tx>目标交易
+				minproof(length, 1);                                                                                        //给出cur的proof路径及hash，并锁定cur指向最小tx
+				return;
+			}
+			else {
+				//fmt.Printf("pretx : %s <\ntargettx : %s <\nnexttx : %s \n", sortedtxhash[index - 1].String(), targettxhash.String(), sortedtxhash[index]) //最大tx<目标交易
+				normalproof(length, index - 1, index);                                                                                                   //给出pre，next的proof路径及hash，spv根据生成的merkle路径定位可知pre与next相邻
+				return;
+			}
+		}
+	}
+	//fmt.Printf("maxtx : %s vs \ntarget : %s \n", sortedtxhash[length - 1], reverseHash(targettxhash).String()) //最大tx<目标交易
+	maxproof(length, length - 1);                                                                              //给出cur的proof路径及hash，锁定cur指向最大tx
+	return;
+
+}
