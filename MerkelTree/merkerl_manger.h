@@ -400,6 +400,7 @@ public:
 	void normalproof(int tx_sum, int pre_index, int next_index);
 	void merklerootexclusive(const std::vector<string> &hash, const std::string &target_hash);
 	string HashMerkleBranches(const string &left, const string right);
+	bool merklerootinclusive(const std::vector<string> &hash, int index, const std::string &root);
 };
 
 #endif

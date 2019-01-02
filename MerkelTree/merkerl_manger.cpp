@@ -178,6 +178,7 @@ int tree::verify(string hash)
 
 	return act_hash == merkleRoot ? 1 : 0;
 }
+
 void tree::iterateUp(int element){
 	node* el_node = this->base[0][element];
 
@@ -257,13 +258,13 @@ void tree::merklerootexclusive(const std::vector<string> &hash, const std::strin
 	while (index < length)
 	{
 		std::string cur = hash[index];
-		if (target_hash.compare(cur)!=0) {
+		if (target_hash.compare(cur) != 0) {
 			index++;
 			continue;
 		}
 		/*else if (target_hash.compare(cur) == 0) {
 			continue;
-		}*/
+			}*/
 		else {
 			if (index == 1){
 				//next = sortedtxhash[0]
@@ -281,4 +282,38 @@ void tree::merklerootexclusive(const std::vector<string> &hash, const std::strin
 	//fmt.Printf("maxtx : %s vs \ntarget : %s \n", sortedtxhash[length - 1], reverseHash(targettxhash).String()) //最大tx<目标交易
 	maxproof(length, length - 1);                                                                              //给出cur的proof路径及hash，锁定cur指向最大tx
 	return;
+}
+
+string tree::HashMerkleBranches(const string &left, const string right){
+	return picosha2::hash256_hex_string(left + right);
+}
+
+bool tree::merklerootinclusive(const std::vector<string> &hash, int index, const std::string &root){
+	int length = hash.size();
+	std::vector<string> nodeshash;
+	nodeshash.insert(nodeshash.end(), hash.begin(), hash.end());
+	if (length < index){
+		std::cout << "sssss:" << length;
+		return false;
+	}
+
+	for (int cur  = index; cur < length - 1; ){
+		if (cur % 2 == 0 ){ //left
+			string neigh = nodeshash[cur + 1];
+			nodeshash[length - (length - 1 - cur) / 2] = HashMerkleBranches(nodeshash[cur], neigh); //left,right
+			cur = length - (length - 1 - cur) / 2;
+		}
+		else { //right
+			string neigh = nodeshash[cur - 1];
+			nodeshash[length - (length - cur) / 2] = HashMerkleBranches(neigh, nodeshash[cur]);
+			cur = length - 1 - (length - cur - 2) / 2;
+		}
+		std::cout << cur << " vs root:" << nodeshash[cur] << endl;
+	}
+
+	if (root == hash[length - 1]) {
+		return true;
+	}
+	std::cout << "result:" << hash[length - 1] << " vs root:" << root << endl;
+	return false;
 }
