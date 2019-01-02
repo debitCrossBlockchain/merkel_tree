@@ -311,7 +311,7 @@ bool tree::merklerootinclusive(const std::vector<string> &hash, int index, const
 		std::cout << cur << " vs root:" << nodeshash[cur] << endl;
 	}
 
-	if (root == hash[length - 1]) {
+	if (root == nodeshash[length - 1]) {
 		return true;
 	}
 	std::cout << "result:" << hash[length - 1] << " vs root:" << root << endl;

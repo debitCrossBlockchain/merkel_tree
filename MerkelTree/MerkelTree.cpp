@@ -67,6 +67,16 @@ int _tmain(int argc, _TCHAR* argv[])
 	{
 		cout << "something is wrong\n";
 	}
+
+	vector<string> spv_v;
+	spv_v.push_back("e11a20bae8379fdc0ed560561ba33f30c877e0e95051aed5acebcb9806f6521f");
+	spv_v.push_back("7ffba6de305b8e12dfa42b70467ae808662c249dbf85798e608ea9486365637b");
+	spv_v.push_back("10");
+	spv_v.push_back("11");
+	spv_v.push_back("0032459c69d6498f98eaaed1fbd94302c6527476ca64e7113c3555ad62271074");
+	spv_v.push_back("a901f842b0016f1e350d20b751851a7179e26dfbb74b213c7a92d37f3c4fbb6c");
+	bool flag = ntree.merklerootinclusive(spv_v, 2, "a901f842b0016f1e350d20b751851a7179e26dfbb74b213c7a92d37f3c4fbb6c");
+	int b = 0;
 	return 0;
 }
 
