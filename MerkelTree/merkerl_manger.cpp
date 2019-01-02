@@ -227,3 +227,7 @@ string tree::buildflags(int tx_sum, int target_index){
 	std::cout << endl;
 	return "1" + sub_str; //root ½Úµã
 }
+
+void tree::minproof(int tx_sum, int target_index){
+
+}
