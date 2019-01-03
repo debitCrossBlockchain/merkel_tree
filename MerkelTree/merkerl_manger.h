@@ -377,13 +377,6 @@ public:
 	virtual ~node();
 };
 
-class  SpvNode{
-public:
-	string node_hash_;
-	int flag;
-	int cur;
-};
-
 
 class MerkleProofHash{
 public:
@@ -419,15 +412,8 @@ public:
 	void iterateUp(int element);
 	int verify(string hash);
 	virtual ~tree();
-	bool VerifySPV(const string &root);
-
-	string buildflags(int tx_sum, int target_index, std::vector<SpvNode> &spv_node);
-	void minproof(int tx_sum, int target_index);
-	void maxproof(int tx_sum, int target_index);
-	void normalproof(int tx_sum, int pre_index, int next_index);
-	void merklerootexclusive(const std::vector<string> &hash, const std::string &target_hash);
 	string HashMerkleBranches(const string &left, const string &right);
-	bool merklerootinclusive(const std::vector<string> &hash, int index, const std::string &root);
+	
 
 	void BuildAuditTrail(vector<MerkleProofHash> &auditTrail, node* parent, node* child);
 	void AuditProof(const std::string &leafHash,std::vector<MerkleProofHash> &auditTrail);
