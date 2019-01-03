@@ -96,8 +96,8 @@ void tree::buildTree() //建造merkle tree
 				&new_parent << endl;
 		}
 
-		// printTreelevel(new_nodes);
-
+		printTreeLevel(new_nodes);
+		node_list_.insert(node_list_.end(), new_nodes.begin(), new_nodes.end());
 		//将新一轮的父节点new_n  odes压入base
 		base.push_back(new_nodes);
 
@@ -124,15 +124,13 @@ void tree::buildBaseLeafes(vector<string> base_leafs) //建立叶子节点列表
 	cout << "Root leafs are : " << '\n';
 
 	//给每一个字符串创建对应节点，并通过这个字符串设置哈希值
-	for (auto leaf : base_leafs)
-	{
+	for (auto leaf : base_leafs){
 		node* new_node = new node;
 		new_node->setHash(leaf);
 		cout << new_node->getHash() << '\n';
-
 		new_nodes.push_back(new_node);
 	}
-
+	node_list_.insert(node_list_.end(), new_nodes.begin(), new_nodes.end());
 	base.push_back(new_nodes);
 	cout << '\n';
 }
@@ -191,7 +189,7 @@ void tree::iterateUp(int element){
 }
 tree::~tree() {}
 
-string tree::buildflags(int tx_sum, int target_index){
+string tree::buildflags(int tx_sum, int target_index,std::vector<SpvNode> &spv_nodes){
 	std::list<int> hash;
 	int nodes_length = tx_sum * 2 - 1;
 	string sub_str;
@@ -222,30 +220,50 @@ string tree::buildflags(int tx_sum, int target_index){
 	}
 	std::cout << "hash list of " << target_index << " :" << endl;
 	std::list<int>::const_iterator iter = hash.begin();
+	vector<int> leaf_hash;
 	while (iter != hash.end()){
 		int temp = *iter++;
+		leaf_hash.push_back(temp);
 		std::cout << " " << temp << ";";
 	}
 	std::cout << endl;
-	return "1" + sub_str; //root 节点
+	string flag_str = "1" + sub_str;
+	size_t j = 0;
+	rsize_t hash_length = leaf_hash.size();
+	for (size_t i = 0; i < flag_str.length(); i++){
+		SpvNode spv_node;
+		char flag = flag_str.at(i);
+		spv_node.flag = atoi(&flag);
+		if ((spv_node.flag==0)&&(j<hash_length - 1)){
+			spv_node.cur = leaf_hash[j];
+			spv_node.node_hash_ = node_list_[spv_node.cur]->getHash();
+			j++;
+		}
+		spv_nodes.push_back(spv_node);
+	}
+	return flag_str; //root 节点
 }
 
 void tree::minproof(int tx_sum, int target_index){
 	string flag;
-	flag = buildflags(tx_sum, target_index);
+	std::vector<SpvNode> spv_node;
+	flag = buildflags(tx_sum, target_index, spv_node);
 	std::cout << "minflag :" << flag << endl;
 }
 
 void tree::maxproof(int tx_sum, int target_index){
 	string flag;
-	flag = buildflags(tx_sum, target_index);
+	std::vector<SpvNode> spv_node;
+	flag = buildflags(tx_sum, target_index, spv_node);
 	std::cout << "maxflag :" << flag << endl;
 }
 
 void tree::normalproof(int tx_sum, int pre_index, int next_index){
 	string pre_flag, next_flag;
-	pre_flag = buildflags(tx_sum, pre_index);
-	next_flag = buildflags(tx_sum, next_index);
+	std::vector<SpvNode> spv_node_pre;
+	std::vector<SpvNode> spv_node_next;
+	pre_flag = buildflags(tx_sum, pre_index, spv_node_pre);
+	next_flag = buildflags(tx_sum, next_index, spv_node_next);
 	std::cout << "preflag :" << pre_flag << endl;
 	std::cout << "nextflag :" << next_flag << endl;
 }
@@ -284,7 +302,7 @@ void tree::merklerootexclusive(const std::vector<string> &hash, const std::strin
 	return;
 }
 
-string tree::HashMerkleBranches(const string &left, const string right){
+string tree::HashMerkleBranches(const string &left, const string &right){
 	return picosha2::hash256_hex_string(left + right);
 }
 
@@ -299,7 +317,7 @@ bool tree::merklerootinclusive(const std::vector<string> &hash, int index, const
 
 	for (int cur  = index; cur < length - 1; ){
 		if (cur % 2 == 0 ){ //left
-			string neigh = nodeshash[cur + 1];
+			 string neigh = nodeshash[cur + 1];
 			nodeshash[length - (length - 1 - cur) / 2] = HashMerkleBranches(nodeshash[cur], neigh); //left,right
 			cur = length - (length - 1 - cur) / 2;
 		}
@@ -316,4 +334,29 @@ bool tree::merklerootinclusive(const std::vector<string> &hash, int index, const
 	}
 	std::cout << "result:" << hash[length - 1] << " vs root:" << root << endl;
 	return false;
+}
+
+bool tree::VerifySPV(const string &root){
+
+	string flag;
+	std::vector<SpvNode> spv_node;
+	flag = buildflags(16, 10, spv_node);
+	size_t length = spv_node.size() - 1;
+	for (size_t i = length; i > 0; i = i - 2){
+		size_t left_cur = i - 1;
+		size_t right_cur = i;
+		size_t paternt_cur = i - 2;
+		if (paternt_cur < 0){
+			break;
+		}
+		string patern_hash = HashMerkleBranches(spv_node[left_cur].node_hash_, spv_node[right_cur].node_hash_);
+		SpvNode &spv_new = spv_node[paternt_cur];
+		spv_new.node_hash_ = patern_hash;
+	}
+	
+	if (root == spv_node[0].node_hash_){
+		return true;
+	}else{
+		return false;
+	}
 }

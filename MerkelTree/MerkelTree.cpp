@@ -69,13 +69,12 @@ int _tmain(int argc, _TCHAR* argv[])
 	}
 
 	vector<string> spv_v;
-	spv_v.push_back("e11a20bae8379fdc0ed560561ba33f30c877e0e95051aed5acebcb9806f6521f");
-	spv_v.push_back("7ffba6de305b8e12dfa42b70467ae808662c249dbf85798e608ea9486365637b");
-	spv_v.push_back("10");
-	spv_v.push_back("11");
-	spv_v.push_back("0032459c69d6498f98eaaed1fbd94302c6527476ca64e7113c3555ad62271074");
+	spv_v.push_back("4a44dc15364204a80fe80e9039455cc1608281820fe2b24f1e5233ade6af1dd5");
+	spv_v.push_back("1f12220da624f190b8e2d897ff9400503d1ada72cc2569499001ebf96485c80a");
+	spv_v.push_back("d13f4af490794ac71f7a1c3570bbfc6adc92bef2e628ab6cddb24cc68e35399d");
+	spv_v.push_back("599e90a987a3df1ef27a685ebcb8baf9fb1dc7d3f2bb135b63a1d8adcd4034b6");
 	spv_v.push_back("a901f842b0016f1e350d20b751851a7179e26dfbb74b213c7a92d37f3c4fbb6c");
-	bool flag = ntree.merklerootinclusive(spv_v, 2, "a901f842b0016f1e350d20b751851a7179e26dfbb74b213c7a92d37f3c4fbb6c");
+	bool flag = ntree.merklerootinclusive(spv_v, 0, "a901f842b0016f1e350d20b751851a7179e26dfbb74b213c7a92d37f3c4fbb6c");
 	int b = 0;
 	return 0;
 }
