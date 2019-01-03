@@ -360,3 +360,20 @@ bool tree::VerifySPV(const string &root){
 		return false;
 	}
 }
+
+void tree::BuildAuditTrail(vector<MerkleProofHash> &auditTrail, node* parent, node* child){
+	if (parent != NULL)
+	{
+		//Contract(() = > child.Parent == parent, "Parent of child is not expected parent.");
+		auto nextChild = parent->getChildren(0) == child->getParent() ? parent->getChildren(1) : parent->getChildren(0);
+		auto direction = parent->getChildren(0) == child ? MerkleProofHash::Branch::Left : MerkleProofHash::Branch::Right;
+
+		// For the last leaf, the right node may not exist.  In that case, we ignore it because it's
+		// the hash we are given to verify.
+		if (nextChild != NULL){
+			auditTrail.push_back(MerkleProofHash(nextChild->getHash(), direction));
+		}
+
+		BuildAuditTrail(auditTrail, child->getParent()->getParent(), child->getParent());
+	}
+}

@@ -385,6 +385,24 @@ public:
 };
 
 
+class MerkleProofHash{
+public:
+	enum Branch
+	{
+		Left,
+		Right,
+		OldRoot,    // used for linear list of hashes to compute the old root in a consistency proof.
+	};
+	std::string hash_;
+	Branch direction_;
+
+    MerkleProofHash(std::string hash, Branch direction)
+	{
+		hash_ = hash;
+		direction_ = direction;
+	}
+};
+
 class tree{
 
 private:
@@ -410,6 +428,8 @@ public:
 	void merklerootexclusive(const std::vector<string> &hash, const std::string &target_hash);
 	string HashMerkleBranches(const string &left, const string &right);
 	bool merklerootinclusive(const std::vector<string> &hash, int index, const std::string &root);
+
+	void BuildAuditTrail(vector<MerkleProofHash> &auditTrail, node* parent, node* child);
 };
 
 #endif

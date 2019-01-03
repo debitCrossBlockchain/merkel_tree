@@ -68,6 +68,8 @@ int _tmain(int argc, _TCHAR* argv[])
 		cout << "something is wrong\n";
 	}
 
+	ntree.VerifySPV("a901f842b0016f1e350d20b751851a7179e26dfbb74b213c7a92d37f3c4fbb6c");
+
 	vector<string> spv_v;
 	spv_v.push_back("4a44dc15364204a80fe80e9039455cc1608281820fe2b24f1e5233ade6af1dd5");
 	spv_v.push_back("1f12220da624f190b8e2d897ff9400503d1ada72cc2569499001ebf96485c80a");
