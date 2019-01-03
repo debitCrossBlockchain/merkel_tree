@@ -77,6 +77,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	spv_v.push_back("599e90a987a3df1ef27a685ebcb8baf9fb1dc7d3f2bb135b63a1d8adcd4034b6");
 	spv_v.push_back("a901f842b0016f1e350d20b751851a7179e26dfbb74b213c7a92d37f3c4fbb6c");
 	bool flag = ntree.merklerootinclusive(spv_v, 0, "a901f842b0016f1e350d20b751851a7179e26dfbb74b213c7a92d37f3c4fbb6c");
+	ntree.TestVerifyAudit();
 	int b = 0;
 	return 0;
 }

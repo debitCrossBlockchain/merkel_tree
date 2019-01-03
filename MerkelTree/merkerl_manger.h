@@ -430,6 +430,9 @@ public:
 	bool merklerootinclusive(const std::vector<string> &hash, int index, const std::string &root);
 
 	void BuildAuditTrail(vector<MerkleProofHash> &auditTrail, node* parent, node* child);
+	void AuditProof(const std::string &leafHash,std::vector<MerkleProofHash> &auditTrail);
+	bool VerifyAudit(const std::string &rootHash, const std::string& leafHash, std::vector<MerkleProofHash> &auditTrail);
+	void TestVerifyAudit();
 };
 
 #endif

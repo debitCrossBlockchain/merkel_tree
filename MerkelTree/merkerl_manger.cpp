@@ -362,10 +362,25 @@ bool tree::VerifySPV(const string &root){
 }
 
 void tree::BuildAuditTrail(vector<MerkleProofHash> &auditTrail, node* parent, node* child){
+	//if (parent != null)
+	//{
+	//	Contract(() = > child.Parent == parent, "Parent of child is not expected parent.");
+	//	var nextChild = parent.LeftNode == child ? parent.RightNode : parent.LeftNode;
+	//	var direction = parent.LeftNode == child ? MerkleProofHash.Branch.Left : MerkleProofHash.Branch.Right;
+
+	//	// For the last leaf, the right node may not exist.  In that case, we ignore it because it's
+	//	// the hash we are given to verify.
+	//	if (nextChild != null)
+	//	{
+	//		auditTrail.Add(new MerkleProofHash(nextChild.Hash, direction));
+	//	}
+
+	//	BuildAuditTrail(auditTrail, child.Parent.Parent, child.Parent);
+	//}
 	if (parent != NULL)
 	{
 		//Contract(() = > child.Parent == parent, "Parent of child is not expected parent.");
-		auto nextChild = parent->getChildren(0) == child->getParent() ? parent->getChildren(1) : parent->getChildren(0);
+		auto nextChild = parent->getChildren(0) == child ? parent->getChildren(1) : parent->getChildren(0);
 		auto direction = parent->getChildren(0) == child ? MerkleProofHash::Branch::Left : MerkleProofHash::Branch::Right;
 
 		// For the last leaf, the right node may not exist.  In that case, we ignore it because it's
@@ -376,4 +391,49 @@ void tree::BuildAuditTrail(vector<MerkleProofHash> &auditTrail, node* parent, no
 
 		BuildAuditTrail(auditTrail, child->getParent()->getParent(), child->getParent());
 	}
+}
+
+bool tree::VerifyAudit(const std::string &rootHash, const std::string& leafHash, std::vector<MerkleProofHash> &auditTrail){
+	if (auditTrail.size() < 0){
+		return false;
+	}
+	std::string testHash = leafHash;
+
+	// TODO: Inefficient - compute hashes directly.
+
+	for (auto iter = auditTrail.begin(); iter != auditTrail.end(); iter++){
+		testHash = iter->direction_ == MerkleProofHash::Branch::Left ?
+			HashMerkleBranches(testHash, iter->hash_) : HashMerkleBranches(iter->hash_, testHash);
+	}
+	return rootHash == testHash;
+}
+
+void tree::AuditProof(const std::string &leafHash, std::vector<MerkleProofHash> &auditTrail){
+
+	node* leafNode = nullptr;
+	string act_hash = leafHash; //想验证的叶子节点的额哈希值
+
+	//如果base[0] 即叶子节点中有一个节点的hash值和其相等
+	for (int i = 0; i < base[0].size(); i++)
+	{
+		if (base[0][i]->getHash() == leafHash)
+		{
+			leafNode = base[0][i]; //指向该节点
+		}
+	}
+
+	if (leafNode != NULL){
+		if (leafNode->getParent() == nullptr){
+			return;
+		}
+		auto parent = leafNode->getParent();
+		BuildAuditTrail(auditTrail, parent, leafNode);
+	}
+}
+
+void tree::TestVerifyAudit(){
+	string hash = HashMerkleBranches("5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9","6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b");
+	vector<MerkleProofHash> auditTrail;
+	AuditProof("4a44dc15364204a80fe80e9039455cc1608281820fe2b24f1e5233ade6af1dd5",auditTrail);
+	VerifyAudit("a901f842b0016f1e350d20b751851a7179e26dfbb74b213c7a92d37f3c4fbb6c", "4a44dc15364204a80fe80e9039455cc1608281820fe2b24f1e5233ade6af1dd5", auditTrail);
 }
